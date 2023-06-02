@@ -2,7 +2,7 @@ import { defineManifest } from '@crxjs/vite-plugin'
 
 export default defineManifest({
   name: 'huzzle-autofill',
-  description: '',
+  description: 'This is an autofill extension of Huzzle app.',
   version: '1.0.0',
   manifest_version: 3,
   icons: {
@@ -32,5 +32,6 @@ export default defineManifest({
       matches: [],
     },
   ],
-  permissions: [],
+  permissions: ['activeTab', 'tabs', 'storage'],
+  host_permissions: ['http://*/*', 'https://*/*'],
 })
