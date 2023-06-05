@@ -1,53 +1,54 @@
 console.info('Content script is running....')
 console.log('Before event listener')
 
+interface FormItem {
+  id: number
+  type: 'input' | 'textarea' | 'select'
+  placeholder?: string
+  label?: string | null // <-- Allow null value here
+  options?: string[]
+}
+
 if (document.readyState === 'loading') {
-  // Loading has not finished
   document.addEventListener('DOMContentLoaded', logInputData)
 } else {
-  // `DOMContentLoaded` has already fired
   logInputData()
 }
 
 function logInputData() {
   console.log('Inside event listener')
 
-  const inputs = Array.from(document.querySelectorAll('input'))
-  const inputItems = inputs.map((input, index) => {
-    const label = document.querySelector(`label[for="${input.id}"]`) as HTMLElement
-    return {
-      id: index,
-      type: 'input',
-      placeholder: input.placeholder,
-      label: label ? label.innerText : null,
+  const allItems: FormItem[] = []
+
+  for (let form of Array.from(document.forms)) {
+    for (let field of Array.from(form.elements)) {
+      const item: FormItem = {
+        id: field.id,
+        type: field.tagName.toLowerCase() as 'input' | 'textarea' | 'select',
+      }
+      if (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement) {
+        item.placeholder = field.placeholder
+        item.label =
+          (document.querySelector(`label[for="${field.id}"]`) as HTMLElement)?.innerText || null
+      }
+      if (field instanceof HTMLSelectElement) {
+        item.options = Array.from(field.options).map((option) => option.value)
+      }
+      allItems.push(item)
     }
-  })
+  }
 
-  const textareas = Array.from(document.querySelectorAll('textarea'))
-  const textareaItems = textareas.map((textarea, index) => ({
-    id: index,
-    type: 'textarea',
-    placeholder: textarea.placeholder,
-  }))
-
-  const selects = Array.from(document.querySelectorAll('select'))
-  const selectItems = selects.map((select, index) => {
-    const options = Array.from(select.options).map((option) => option.value)
-    return {
-      id: index,
-      type: 'select',
-      options,
-    }
-  })
-
-  // Get the URL of the current page
   const url = window.location.href
 
-  // Combine all items into a single array
-  const allItems = [...inputItems, ...textareaItems, ...selectItems]
+  const allTexts = allItems.map((item) => {
+    if (item.type === 'input' || item.type === 'textarea') {
+      return item.placeholder || item.label
+    } else {
+      return item.options?.join(',')
+    }
+  })
 
-  // Send a message to the background script
-  chrome.runtime.sendMessage({ allItems, url })
+  chrome.runtime.sendMessage({ allItems, allTexts, url })
 
-  console.log('Message sent from content script: ', { allItems, url })
+  console.log('Message sent from content script: ', { allItems, allTexts, url })
 }
