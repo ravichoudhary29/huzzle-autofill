@@ -6,7 +6,7 @@
 * {
   margin: 0;
   padding: 0;
-  background-color: cornsilk;
+  background-color: rgb(119, 214, 150);
 }
 
 .popup-container {
@@ -17,4 +17,44 @@
 .title-text {
   color: green;
   text-align: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.top-buttons {
+  display: flex;
+  padding: 5px 5px;
+}
+
+.top-buttons button {
+  border: none;
+  font-size: 20px;
+  padding: 6px 18px;
+  margin: 0px 3px;
+  background-color: rgb(3, 53, 53);
+  border-radius: 4px;
+}
+
+.input-container {
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  margin: 5px 10px;
+}
+
+.input-container div {
+  
+}
+
+.input-container span {
+  margin: 0px 10px 5px 10px;
+  font-size: 16px;
+  align-items: center;
+  justify-content: center;
+}
+
+.input-container input {
+  border: none;
+  background-color: white;
+  align-items: center;
 }
