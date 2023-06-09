@@ -1,4 +1,4 @@
-console.info('Content script is running....')
+// console.info('Content script is running....')
 // console.log('Before event listener')
 
 // interface FormItem {
