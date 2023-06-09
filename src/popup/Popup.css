@@ -6,55 +6,67 @@
 * {
   margin: 0;
   padding: 0;
-  background-color: rgb(119, 214, 150);
 }
 
 .popup-container {
-  height: 500px;
-  width: 400px;
+  height: 800px;
+  width: 420px;
+  background: linear-gradient(rgb(22, 21, 26), rgb(0, 147, 144));
+  padding: 20px;
+  border-radius: 10px;
+  box-sizing: border-box;
+  color: white;
 }
 
 .title-text {
-  color: green;
   text-align: center;
-  padding-top: 10px;
   padding-bottom: 10px;
+  font-size: 24px;
+  font-weight: bold;
 }
 
 .top-buttons {
   display: flex;
-  padding: 5px 5px;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 20px 0;
 }
 
 .top-buttons button {
   border: none;
   font-size: 20px;
   padding: 6px 18px;
-  margin: 0px 3px;
-  background-color: rgb(3, 53, 53);
+  background-color: white;
+  color: rgb(3, 53, 53);
   border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.top-buttons button:hover {
+  background-color: rgba(255, 255, 255, 0.7);
 }
 
 .input-container {
-  width: 360px;
   display: flex;
   flex-direction: column;
-  margin: 5px 10px;
+  gap: 15px;
 }
 
-.input-container div {
-  
+.input-field {
+  display: flex;
+  flex-direction: column;
 }
 
-.input-container span {
-  margin: 0px 10px 5px 10px;
+.input-field span {
+  margin-bottom: 5px;
   font-size: 16px;
-  align-items: center;
-  justify-content: center;
 }
 
-.input-container input {
-  border: none;
+.input-field input {
+  border: 1px solid white;
   background-color: white;
-  align-items: center;
+  color: rgb(3, 53, 53);
+  padding: 5px;
+  border-radius: 3px;
 }
