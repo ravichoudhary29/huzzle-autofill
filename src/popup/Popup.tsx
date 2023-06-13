@@ -14,12 +14,19 @@ const Popup: React.FC = () => {
   const [formItems, setFormItems] = useState<FormItem[]>([])
 
   useEffect(() => {
-    chrome.storage.local.get(['allItems'], function (result) {
-      if (result.allItems) {
-        setFormItems(result.allItems)
+    chrome.runtime.sendMessage({ action: 'getAllItems' }, (response) => {
+      if (response && response.allItems) {
+        setFormItems(response.allItems)
       }
     })
   }, [])
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target
+    console.log('Input changed: ', id, value)
+
+    // Perform any logic or send messages to the background script as needed
+  }
 
   return (
     <div className="container">
@@ -29,7 +36,12 @@ const Popup: React.FC = () => {
         .map((item) => (
           <div className="item" key={item.id}>
             <p className="label">{item.name || item.id || item.placeholder || item.label}</p>
-            <input className="input" type="text" />
+            <input
+              className="input"
+              type="text"
+              id={item.id.toString()}
+              onChange={handleInputChange}
+            />
           </div>
         ))}
     </div>
