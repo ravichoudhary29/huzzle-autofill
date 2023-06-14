@@ -12,11 +12,19 @@ interface FormItem {
 
 const Popup: React.FC = () => {
   const [formItems, setFormItems] = useState<FormItem[]>([])
+  const [currentUrl, setCurrentUrl] = useState<string>('')
 
   useEffect(() => {
     chrome.runtime.sendMessage({ action: 'getAllItems' }, (response) => {
       if (response && response.allItems) {
         setFormItems(response.allItems)
+      }
+    })
+
+    // Get current URL
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0]?.url) {
+        setCurrentUrl(tabs[0].url)
       }
     })
   }, [])
@@ -44,6 +52,7 @@ const Popup: React.FC = () => {
             />
           </div>
         ))}
+      <p className="url">Current URL: {currentUrl}</p> {/* Display the current URL */}
     </div>
   )
 }
