@@ -2,7 +2,7 @@ console.info('Content script is running....')
 
 interface FormItem {
   id: number
-  type: 'input' | 'textarea' | 'select'
+  type: 'input' | 'textarea' | 'select' | 'button' // Add 'button' type
   placeholder?: string
   label?: string | null
   options?: string[]
@@ -23,7 +23,7 @@ function logInputData() {
     for (let field of Array.from(form.elements)) {
       const item: FormItem = {
         id: field.id,
-        type: field.tagName.toLowerCase() as 'input' | 'textarea' | 'select',
+        type: field.tagName.toLowerCase() as 'input' | 'textarea' | 'select' | 'button',
       }
       if (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement) {
         item.placeholder = field.placeholder
@@ -32,6 +32,9 @@ function logInputData() {
       }
       if (field instanceof HTMLSelectElement) {
         item.options = Array.from(field.options).map((option) => option.value)
+      }
+      if (field instanceof HTMLButtonElement) {
+        item.label = field.textContent || null
       }
       allItems.push(item)
     }
@@ -42,6 +45,8 @@ function logInputData() {
   const allTexts = allItems.map((item) => {
     if (item.type === 'input' || item.type === 'textarea') {
       return item.placeholder || item.label
+    } else if (item.type === 'button') {
+      return item.label
     } else {
       return item.options?.join(',')
     }

@@ -3,7 +3,7 @@ import './popup.css'
 
 interface FormItem {
   id: number
-  type: 'input' | 'textarea' | 'select'
+  type: 'input' | 'textarea' | 'select' | 'button' // Add 'button' type
   placeholder?: string
   label?: string | null
   name?: string
@@ -41,6 +41,10 @@ const Popup: React.FC = () => {
     })
   }
 
+  const handleButtonClick = (id: number) => {
+    // Perform any action needed for the button
+    console.log('Button clicked:', id)
+  }
 
   return (
     <div className="container">
@@ -49,15 +53,26 @@ const Popup: React.FC = () => {
         .filter((item) => item.name || item.id || item.placeholder || item.label)
         .map((item) => (
           <div className="item" key={item.id}>
-            <p className="label">
-              {String(item.name || item.id || item.placeholder || item.label).replace(/[_-]/g, ' ')}
-            </p>
-            <input
-              className="input"
-              type="text"
-              id={item.id.toString()}
-              onChange={handleInputChange}
-            />
+            {item.type === 'button' ? (
+              <button className="button" onClick={() => handleButtonClick(item.id)}>
+                {item.label}
+              </button>
+            ) : (
+              <>
+                <p className="label">
+                  {String(item.name || item.id || item.placeholder || item.label).replace(
+                    /[_-]/g,
+                    ' ',
+                  )}
+                </p>
+                <input
+                  className="input"
+                  type="text"
+                  id={item.id.toString()}
+                  onChange={handleInputChange}
+                />
+              </>
+            )}
           </div>
         ))}
       <p className="url">Current URL: {currentUrl}</p> {/* Display the current URL */}
