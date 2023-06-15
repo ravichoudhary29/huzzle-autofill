@@ -9,20 +9,24 @@
 }
 
 .container {
-  width: 420px;
+  width: 440px;
   height: 800px;
   background: linear-gradient(rgb(21, 21, 25), rgba(0, 147, 145));
   color: white;
   padding: 20px;
   box-sizing: border-box;
-  overflow-y: auto;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #4caf50 #4caf50;
 }
 
 .title {
   text-align: center;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  font-size: 1.8em;
+  margin: 12px 0;
+  padding: 5px;
+  font-size: 1.8rem;
+  border: 2px solid aqua;
+  border-radius: 5px;
 }
 
 .item {
@@ -44,4 +48,18 @@
   padding: 10px;
   box-sizing: border-box;
   margin-top: 10px;
+}
+
+.button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.button:hover {
+  background-color: #45a049; /* Darker green background color on hover */
 }

@@ -3,7 +3,7 @@ import './popup.css'
 
 interface FormItem {
   id: number
-  type: 'input' | 'textarea' | 'select' | 'button' // Add 'button' type
+  type: 'input' | 'textarea' | 'select' | 'button'
   placeholder?: string
   label?: string | null
   name?: string
@@ -42,8 +42,12 @@ const Popup: React.FC = () => {
   }
 
   const handleButtonClick = (id: number) => {
-    // Perform any action needed for the button
-    console.log('Button clicked:', id)
+    // Send message to content script to perform button click action
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0]?.id) {
+        chrome.tabs.sendMessage(tabs[0].id, { action: 'performButtonClick', id })
+      }
+    })
   }
 
   return (

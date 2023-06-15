@@ -2,7 +2,7 @@ console.info('Content script is running....')
 
 interface FormItem {
   id: number
-  type: 'input' | 'textarea' | 'select' | 'button' // Add 'button' type
+  type: 'input' | 'textarea' | 'select' | 'button'
   placeholder?: string
   label?: string | null
   options?: string[]
@@ -65,6 +65,15 @@ function logInputData() {
       if (element) {
         element.value = value
       }
+    } else if (message.action === 'performButtonClick') {
+      const { id } = message
+      const element = document.getElementById(id.toString()) as HTMLButtonElement
+      if (element) {
+        element.click()
+      }
     }
   })
+
+  // Send a message to the background script to notify that the content script is ready
+  chrome.runtime.sendMessage({ action: 'contentScriptReady' })
 }
