@@ -33,8 +33,14 @@ const Popup: React.FC = () => {
     const { id, value } = e.target
     console.log('Input changed: ', id, value)
 
-    // Perform any logic or send messages to the background script as needed
+    // Send message to content script to update the input value in the web page
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0]?.id) {
+        chrome.tabs.sendMessage(tabs[0].id, { action: 'updateInputValue', id, value })
+      }
+    })
   }
+
 
   return (
     <div className="container">

@@ -52,6 +52,14 @@ function logInputData() {
   console.log('Message sent from content script: ', { allItems, allTexts, url })
 
   chrome.storage.local.set({ allItems })
+
+  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.action === 'updateInputValue') {
+      const { id, value } = message
+      const element = document.getElementById(id) as HTMLInputElement
+      if (element) {
+        element.value = value
+      }
+    }
+  })
 }
-
-
