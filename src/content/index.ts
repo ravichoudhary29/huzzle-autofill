@@ -53,3 +53,5 @@ function logInputData() {
 
   chrome.storage.local.set({ allItems })
 }
+
+

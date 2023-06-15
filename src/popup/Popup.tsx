@@ -43,7 +43,9 @@ const Popup: React.FC = () => {
         .filter((item) => item.name || item.id || item.placeholder || item.label)
         .map((item) => (
           <div className="item" key={item.id}>
-            <p className="label">{item.name || item.id || item.placeholder || item.label}</p>
+            <p className="label">
+              {String(item.name || item.id || item.placeholder || item.label).replace(/[_-]/g, ' ')}
+            </p>
             <input
               className="input"
               type="text"
