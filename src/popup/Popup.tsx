@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react'
 import './popup.css'
 
 interface FormItem {
-  id: number
+  id: string
   type: 'input' | 'textarea' | 'select'
   placeholder?: string
   label?: string | null
   name?: string
-  options?: string[]
 }
 
 const Popup: React.FC = () => {
@@ -17,7 +16,11 @@ const Popup: React.FC = () => {
   useEffect(() => {
     chrome.runtime.sendMessage({ action: 'getAllItems' }, (response) => {
       if (response && response.allItems) {
-        setFormItems(response.allItems)
+        const filteredItems = response.allItems.filter(
+          (item) =>
+            (item.label || item.placeholder) && (item.type === 'input' || item.type === 'textarea'),
+        )
+        setFormItems(filteredItems)
       }
     })
 
@@ -44,21 +47,19 @@ const Popup: React.FC = () => {
   return (
     <div className="container">
       <h1 className="title">Huzzle AI Autofill</h1>
-      {formItems
-        .filter((item) => item.name || item.id || item.placeholder || item.label)
-        .map((item) => (
-          <div className="item" key={item.id}>
-            <p className="label">
-              {String(item.name || item.placeholder || item.label).replace(/[_-]/g, ' ')}
-            </p>
-            <input
-              className="input"
-              type="text"
-              id={item.id.toString()}
-              onChange={handleInputChange}
-            />
-          </div>
-        ))}
+      {formItems.map((item) => (
+        <div className="item" key={item.id}>
+          <p className="label">
+            {String(item.name || item.label || item.placeholder || '').replace(/[_-]/g, ' ')}
+          </p>
+          <input
+            className="input"
+            type="text"
+            id={item.id.toString()}
+            onChange={handleInputChange}
+          />
+        </div>
+      ))}
       <p className="url">Current URL: {currentUrl}</p> {/* Display the current URL */}
     </div>
   )
