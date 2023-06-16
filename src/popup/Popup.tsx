@@ -3,7 +3,7 @@ import './popup.css'
 
 interface FormItem {
   id: number
-  type: 'input' | 'textarea' | 'select' | 'button'
+  type: 'input' | 'textarea' | 'select'
   placeholder?: string
   label?: string | null
   name?: string
@@ -41,15 +41,6 @@ const Popup: React.FC = () => {
     })
   }
 
-  const handleButtonClick = (id: number) => {
-    // Send message to content script to perform button click action
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs[0]?.id) {
-        chrome.tabs.sendMessage(tabs[0].id, { action: 'performButtonClick', id })
-      }
-    })
-  }
-
   return (
     <div className="container">
       <h1 className="title">Huzzle AI Autofill</h1>
@@ -57,26 +48,15 @@ const Popup: React.FC = () => {
         .filter((item) => item.name || item.id || item.placeholder || item.label)
         .map((item) => (
           <div className="item" key={item.id}>
-            {item.type === 'button' ? (
-              <button className="button" onClick={() => handleButtonClick(item.id)}>
-                {item.label}
-              </button>
-            ) : (
-              <>
-                <p className="label">
-                  {String(item.name || item.id || item.placeholder || item.label).replace(
-                    /[_-]/g,
-                    ' ',
-                  )}
-                </p>
-                <input
-                  className="input"
-                  type="text"
-                  id={item.id.toString()}
-                  onChange={handleInputChange}
-                />
-              </>
-            )}
+            <p className="label">
+              {String(item.name || item.id || item.placeholder || item.label).replace(/[_-]/g, ' ')}
+            </p>
+            <input
+              className="input"
+              type="text"
+              id={item.id.toString()}
+              onChange={handleInputChange}
+            />
           </div>
         ))}
       <p className="url">Current URL: {currentUrl}</p> {/* Display the current URL */}
