@@ -49,7 +49,7 @@ const Popup: React.FC = () => {
         .map((item) => (
           <div className="item" key={item.id}>
             <p className="label">
-              {String(item.name || item.id || item.placeholder || item.label).replace(/[_-]/g, ' ')}
+              {String(item.name || item.placeholder || item.label).replace(/[_-]/g, ' ')}
             </p>
             <input
               className="input"

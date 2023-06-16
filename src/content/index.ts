@@ -1,7 +1,7 @@
 console.info('Content script is running....')
 
 interface FormItem {
-  id: number
+  id: string
   type: 'input' | 'textarea' | 'select'
   placeholder?: string
   label?: string | null
@@ -24,11 +24,14 @@ function logInputData() {
       const item: FormItem = {
         id: field.id,
         type: field.tagName.toLowerCase() as 'input' | 'textarea' | 'select',
+        label: null, // Initialize the label as null
       }
       if (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement) {
         item.placeholder = field.placeholder
-        item.label =
-          (document.querySelector(`label[for="${field.id}"]`) as HTMLElement)?.innerText || null
+        const labelElement = document.querySelector(`label[for="${field.id}"]`) as HTMLElement
+        if (labelElement) {
+          item.label = labelElement.innerText // Get the label text
+        }
       }
       if (field instanceof HTMLSelectElement) {
         item.options = Array.from(field.options).map((option) => option.value)
