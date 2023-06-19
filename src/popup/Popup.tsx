@@ -19,7 +19,8 @@ const Popup: React.FC = () => {
       if (response && response.allItems) {
         const filteredItems = response.allItems.filter(
           (item) =>
-            (item.label || item.placeholder) && (item.type === 'input' || item.type === 'textarea'),
+            (item.label || item.placeholder || item.name) &&
+            (item.type === 'input' || item.type === 'textarea'),
         )
         setFormItems(filteredItems)
       }

@@ -5,7 +5,8 @@ interface FormItem {
   type: 'input' | 'textarea' | 'select'
   placeholder?: string
   label?: string | null
-  options?: string[]
+  // options?: string[]
+  name?: string
 }
 
 if (document.readyState === 'loading') {
@@ -25,6 +26,7 @@ function logInputData() {
         id: field.id,
         type: field.tagName.toLowerCase() as 'input' | 'textarea' | 'select',
         label: null, // Initialize the label as null
+        name: field.name,
       }
       if (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement) {
         item.placeholder = field.placeholder
@@ -33,9 +35,9 @@ function logInputData() {
           item.label = labelElement.innerText // Get the label text
         }
       }
-      if (field instanceof HTMLSelectElement) {
-        item.options = Array.from(field.options).map((option) => option.value)
-      }
+      // if (field instanceof HTMLSelectElement) {
+      //   item.options = Array.from(field.options).map((option) => option.value)
+      // }
       allItems.push(item)
     }
   }
@@ -44,9 +46,9 @@ function logInputData() {
 
   const allTexts = allItems.map((item) => {
     if (item.type === 'input' || item.type === 'textarea') {
-      return item.placeholder || item.label
+      return item.placeholder || item.label || item.name
     } else {
-      return item.options?.join(',')
+      // return item.options?.join(',')
     }
   })
 
@@ -65,7 +67,7 @@ function logInputData() {
       }
     } else if (message.action === 'performAutoFill') {
       const { formItems } = message
-      formItems.forEach((item) => {
+      formItems.forEach((item: { id: string; value: string }) => {
         const element = document.getElementById(item.id) as HTMLInputElement | HTMLTextAreaElement
         if (element) {
           element.value = item.value || ''
