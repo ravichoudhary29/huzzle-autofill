@@ -61,9 +61,11 @@ const Popup: React.FC = () => {
   return (
     <div className="container">
       <h1 className="title">Huzzle AI Autofill</h1>
-      <button className="autofill-button" onClick={handleAutoFill}>
-        Autofill
-      </button>
+      <div className="autofill-button-container">
+        <button className="autofill-button" onClick={handleAutoFill}>
+          Autofill
+        </button>
+      </div>
       {formItems.map((item) => (
         <div className="item" key={item.id}>
           <p className="label">
