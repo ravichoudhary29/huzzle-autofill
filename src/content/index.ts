@@ -63,6 +63,14 @@ function logInputData() {
       if (element) {
         element.value = value
       }
+    } else if (message.action === 'performAutoFill') {
+      const { formItems } = message
+      formItems.forEach((item) => {
+        const element = document.getElementById(item.id) as HTMLInputElement | HTMLTextAreaElement
+        if (element) {
+          element.value = item.value || ''
+        }
+      })
     }
   })
 

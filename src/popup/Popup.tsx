@@ -7,6 +7,7 @@ interface FormItem {
   placeholder?: string
   label?: string | null
   name?: string
+  value?: string // Added value property for storing the user input
 }
 
 const Popup: React.FC = () => {
@@ -36,10 +37,23 @@ const Popup: React.FC = () => {
     const { id, value } = e.target
     console.log('Input changed: ', id, value)
 
-    // Send message to content script to update the input value in the web page
+    const updatedFormItems = formItems.map((item) =>
+      item.id === id ? { ...item, value: value } : item,
+    )
+    setFormItems(updatedFormItems)
+  }
+
+  const handleAutoFill = () => {
+    // Filter out the form items that have user input
+    const filledFormItems = formItems.filter((item) => item.value)
+
+    // Send message to content script to perform autofill action with the filled form items
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       if (tabs[0]?.id) {
-        chrome.tabs.sendMessage(tabs[0].id, { action: 'updateInputValue', id, value })
+        chrome.tabs.sendMessage(tabs[0].id, {
+          action: 'performAutoFill',
+          formItems: filledFormItems,
+        })
       }
     })
   }
@@ -47,6 +61,9 @@ const Popup: React.FC = () => {
   return (
     <div className="container">
       <h1 className="title">Huzzle AI Autofill</h1>
+      <button className="autofill-button" onClick={handleAutoFill}>
+        Autofill
+      </button>
       {formItems.map((item) => (
         <div className="item" key={item.id}>
           <p className="label">
@@ -56,6 +73,7 @@ const Popup: React.FC = () => {
             className="input"
             type="text"
             id={item.id.toString()}
+            value={item.value || ''}
             onChange={handleInputChange}
           />
         </div>

@@ -18,6 +18,7 @@
   overflow-y: scroll;
   scrollbar-width: thin;
   scrollbar-color: #4caf50 #4caf50;
+  position: relative; /* Added position relative */
 }
 
 .title {
@@ -50,14 +51,16 @@
   margin-top: 10px;
 }
 
-.button {
+.autofill-button {
   background-color: #4caf50;
   color: white;
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  margin-top: 10px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }
 
 .button:hover {
