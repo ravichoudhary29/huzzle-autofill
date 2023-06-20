@@ -6,7 +6,6 @@ interface FormItem {
   type: 'input' | 'textarea' | 'select'
   placeholder?: string
   label?: string | null
-  name?: string
   value?: string // Added value property for storing the user input
 }
 
@@ -70,7 +69,9 @@ const Popup: React.FC = () => {
       {formItems.map((item) => (
         <div className="item" key={item.id}>
           <p className="label">
-            {String(item.name || item.label || item.placeholder || '').replace(/[_-]/g, ' ')}
+            {String(
+              item.label || item.placeholder || '',
+            ).replace(/[_-]/g, ' ')}
           </p>
           <input
             className="input"
