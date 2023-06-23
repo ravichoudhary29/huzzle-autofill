@@ -5,6 +5,7 @@ interface FormItem {
   type: 'input' | 'textarea' | 'select'
   placeholder?: string
   label?: string | null
+  name?: string | null
 }
 
 if (document.readyState === 'loading') {
@@ -23,13 +24,17 @@ function logInputData() {
       const item: FormItem = {
         id: field.id,
         type: field.tagName.toLowerCase() as 'input' | 'textarea' | 'select',
-        label: null, // Initialize the label as null
+        label: null,
+        name: null, // Initialize the name as null
       }
       if (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement) {
         item.placeholder = field.placeholder
         const labelElement = document.querySelector(`label[for="${field.id}"]`) as HTMLElement
         if (labelElement) {
-          item.label = labelElement.innerText // Get the label text
+          item.label = labelElement.innerText
+        }
+        if (field.name) {
+          item.name = field.name
         }
       }
 
@@ -40,9 +45,24 @@ function logInputData() {
   const url = window.location.href
 
   const allTexts = allItems.map((item) => {
-    if (item.type === 'input' || item.type === 'textarea') {
-      return item.placeholder || item.label
-    }
+    const { label, placeholder, name } = item
+    const textList = [label, placeholder, name].filter(Boolean) // Filter out null or empty values
+
+    const searchTexts = [
+      'name',
+      'email',
+      'phone',
+      'linkedIn',
+      'twitter',
+      'github',
+      'portfolio',
+      'gender',
+    ]
+    const matchedTexts = textList.filter((text) =>
+      searchTexts.some((searchText) => text.toLowerCase().includes(searchText)),
+    )
+
+    return matchedTexts.join(', ')
   })
 
   chrome.runtime.sendMessage({ allItems, allTexts, url })

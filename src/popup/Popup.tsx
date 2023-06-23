@@ -6,6 +6,7 @@ interface FormItem {
   type: 'input' | 'textarea' | 'select'
   placeholder?: string
   label?: string | null
+  name?: string | null
   value?: string // Added value property for storing the user input
 }
 
@@ -16,10 +17,23 @@ const Popup: React.FC = () => {
   useEffect(() => {
     chrome.runtime.sendMessage({ action: 'getAllItems' }, (response) => {
       if (response && response.allItems) {
+        const searchTexts = [
+          'name',
+          'email',
+          'phone',
+          'linkedIn',
+          'twitter',
+          'github',
+          'portfolio',
+          'gender',
+        ]
         const filteredItems = response.allItems.filter(
-          (item) =>
+          (item: FormItem) =>
             (item.label || item.placeholder || item.name) &&
-            (item.type === 'input' || item.type === 'textarea'),
+            searchTexts.some((searchText) => {
+              const text = `${item.label} ${item.placeholder} ${item.name}`.toLowerCase()
+              return text.includes(searchText)
+            }),
         )
         setFormItems(filteredItems)
       }
@@ -52,7 +66,7 @@ const Popup: React.FC = () => {
       if (tabs[0]?.id) {
         chrome.tabs.sendMessage(tabs[0].id, {
           action: 'performAutoFill',
-          formItems: filledFormItems,
+          formItems: filledFormItems.map((item) => ({ id: item.id, value: item.value })),
         })
       }
     })
@@ -69,9 +83,7 @@ const Popup: React.FC = () => {
       {formItems.map((item) => (
         <div className="item" key={item.id}>
           <p className="label">
-            {String(
-              item.label || item.placeholder || '',
-            ).replace(/[_-]/g, ' ')}
+            {String(item.label || item.placeholder || item.name || '').replace(/[_-]/g, ' ')}
           </p>
           <input
             className="input"
@@ -82,7 +94,7 @@ const Popup: React.FC = () => {
           />
         </div>
       ))}
-      <p className="url">Current URL: {currentUrl}</p> {/* Display the current URL */}
+      <p className="url">Current URL: {currentUrl}</p>
     </div>
   )
 }
