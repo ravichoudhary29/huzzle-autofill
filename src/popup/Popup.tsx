@@ -2,12 +2,8 @@ import React, { useEffect, useState } from 'react'
 import './popup.css'
 
 interface FormItem {
-  id: string
-  type: 'input' | 'textarea' | 'select'
-  placeholder?: string
-  label?: string | null
-  name?: string | null
-  value?: string // Added value property for storing the user input
+  name: string
+  value?: string
 }
 
 const Popup: React.FC = () => {
@@ -19,21 +15,18 @@ const Popup: React.FC = () => {
       if (response && response.allItems) {
         const searchTexts = [
           'name',
+          'firstname',
+          'lastname',
           'email',
           'phone',
-          'linkedIn',
+          'linkedin',
           'twitter',
           'github',
           'portfolio',
           'gender',
         ]
-        const filteredItems = response.allItems.filter(
-          (item: FormItem) =>
-            (item.label || item.placeholder || item.name) &&
-            searchTexts.some((searchText) => {
-              const text = `${item.label} ${item.placeholder} ${item.name}`.toLowerCase()
-              return text.includes(searchText)
-            }),
+        const filteredItems = response.allItems.filter((item: FormItem) =>
+          searchTexts.some((searchText) => item.name.toLowerCase().includes(searchText)),
         )
         setFormItems(filteredItems)
       }
@@ -48,11 +41,11 @@ const Popup: React.FC = () => {
   }, [])
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target
-    console.log('Input changed: ', id, value)
+    const { name, value } = e.target
+    console.log('Input changed: ', name, value)
 
     const updatedFormItems = formItems.map((item) =>
-      item.id === id ? { ...item, value: value } : item,
+      item.name.toLowerCase() === name.toLowerCase() ? { ...item, value: value } : item,
     )
     setFormItems(updatedFormItems)
   }
@@ -66,7 +59,7 @@ const Popup: React.FC = () => {
       if (tabs[0]?.id) {
         chrome.tabs.sendMessage(tabs[0].id, {
           action: 'performAutoFill',
-          formItems: filledFormItems.map((item) => ({ id: item.id, value: item.value })),
+          formItems: filledFormItems.map((item) => ({ name: item.name, value: item.value })),
         })
       }
     })
@@ -81,14 +74,12 @@ const Popup: React.FC = () => {
         </button>
       </div>
       {formItems.map((item) => (
-        <div className="item" key={item.id}>
-          <p className="label">
-            {String(item.label || item.placeholder || item.name || '').replace(/[_-]/g, ' ')}
-          </p>
+        <div className="item" key={item.name}>
+          <p className="label">{item.name}</p>
           <input
             className="input"
             type="text"
-            id={item.id.toString()}
+            name={item.name}
             value={item.value || ''}
             onChange={handleInputChange}
           />

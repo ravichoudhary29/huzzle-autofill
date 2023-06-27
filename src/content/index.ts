@@ -1,11 +1,7 @@
 console.info('Content script is running....')
 
 interface FormItem {
-  id: string
-  type: 'input' | 'textarea'
-  placeholder?: string | null
-  label?: string | null
-  name?: string | null
+  name: string
 }
 
 if (document.readyState === 'loading') {
@@ -21,51 +17,20 @@ function logInputData() {
 
   for (let form of Array.from(document.forms)) {
     for (let field of Array.from(form.elements)) {
-      const item: FormItem = {
-        id: field.id,
-        type: field.tagName.toLowerCase() as 'input' | 'textarea',
-        label: null,
-        name: null, // Initialize the name as null
-      }
       if (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement) {
-        item.placeholder = field.placeholder
-        const labelElement = document.querySelector(`label[for="${field.id}"]`) as HTMLElement
-        if (labelElement) {
-          item.label = labelElement.innerText
-        }
         if (field.name) {
-          item.name = field.name
+          const item: FormItem = {
+            name: field.name,
+          }
+          allItems.push(item)
         }
       }
-
-      allItems.push(item)
     }
   }
 
   const url = window.location.href
 
-  const allTexts = allItems.map((item) => {
-    const { label, placeholder, name } = item
-    const textList = [label, placeholder, name].filter(Boolean) // Filter out null or empty values
-
-    const searchTexts = [
-      'name',
-      'firstname',
-      'lastname',
-      'email',
-      'phone',
-      'linkedIn',
-      'twitter',
-      'github',
-      'portfolio',
-      'gender',
-    ]
-    const matchedTexts = textList.filter((text) =>
-      searchTexts.some((searchText) => text.toLowerCase().includes(searchText)),
-    )
-
-    return matchedTexts.join(', ')
-  })
+  const allTexts = allItems.map((item) => item.name).join(', ')
 
   chrome.runtime.sendMessage({ allItems, allTexts, url })
 
@@ -75,15 +40,17 @@ function logInputData() {
 
   chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === 'updateInputValue') {
-      const { id, value } = message
-      const element = document.getElementById(id) as HTMLInputElement
+      const { name, value } = message
+      const element = document.querySelector(`[name="${name}"]`) as HTMLInputElement
       if (element) {
         element.value = value
       }
     } else if (message.action === 'performAutoFill') {
       const { formItems } = message
-      formItems.forEach((item: { id: string; value: string }) => {
-        const element = document.getElementById(item.id) as HTMLInputElement | HTMLTextAreaElement
+      formItems.forEach((item: { name: string; value: string }) => {
+        const element = document.querySelector(`[name="${item.name}"]`) as
+          | HTMLInputElement
+          | HTMLTextAreaElement
         if (element) {
           element.value = item.value || ''
         }
