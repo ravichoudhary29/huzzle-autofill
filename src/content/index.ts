@@ -2,8 +2,8 @@ console.info('Content script is running....')
 
 interface FormItem {
   id: string
-  type: 'input' | 'textarea' | 'select'
-  placeholder?: string
+  type: 'input' | 'textarea'
+  placeholder?: string | null
   label?: string | null
   name?: string | null
 }
@@ -23,7 +23,7 @@ function logInputData() {
     for (let field of Array.from(form.elements)) {
       const item: FormItem = {
         id: field.id,
-        type: field.tagName.toLowerCase() as 'input' | 'textarea' | 'select',
+        type: field.tagName.toLowerCase() as 'input' | 'textarea',
         label: null,
         name: null, // Initialize the name as null
       }
@@ -50,6 +50,8 @@ function logInputData() {
 
     const searchTexts = [
       'name',
+      'firstname',
+      'lastname',
       'email',
       'phone',
       'linkedIn',
