@@ -10,12 +10,11 @@
 
 .container {
   width: 440px;
-  height: 800px;
+  height: auto;
   background: linear-gradient(rgb(21, 21, 25), rgba(0, 147, 145));
   color: white;
   padding: 20px;
   box-sizing: border-box;
-  overflow-y: scroll;
   scrollbar-width: thin;
   scrollbar-color: #05ff0d;
   position: relative; /* Added position relative */

@@ -1,91 +1,84 @@
 import React, { useEffect, useState } from 'react'
-import './popup.css'
 
-interface FormItem {
-  name: string
-  value?: string
+interface IInputProps {
+  label: string
+  value: string
+}
+
+const InputField: React.FC<IInputProps> = ({ label, value }) => {
+  const [inputValue, setInputValue] = useState('')
+
+  useEffect(() => {
+    setInputValue(value)
+  }, [value])
+
+  return (
+    <div>
+      <label>{label}</label>
+      <input type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
+    </div>
+  )
 }
 
 const Popup: React.FC = () => {
-  const [formItems, setFormItems] = useState<FormItem[]>([])
-  const [currentUrl, setCurrentUrl] = useState<string>('')
+  const [formData, setFormData] = useState<any[]>([])
+  const [url, setUrl] = useState<string>('')
 
   useEffect(() => {
-    chrome.runtime.sendMessage({ action: 'getAllItems' }, (response) => {
-      if (response && response.allItems) {
-        const searchTexts = [
-          'name',
-          'firstname',
-          'lastname',
-          'email',
-          'phone',
-          'linkedin',
-          'twitter',
-          'github',
-          'portfolio',
-          'gender',
-        ]
-        const filteredItems = response.allItems.filter((item: FormItem) =>
-          searchTexts.some((searchText) => item.name.toLowerCase().includes(searchText)),
-        )
-        setFormItems(filteredItems)
-      }
-    })
-
-    // Get current URL
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs[0]?.url) {
-        setCurrentUrl(tabs[0].url)
+      const activeTab = tabs[0]
+      if (activeTab.id) {
+        chrome.tabs.sendMessage(activeTab.id, 'getFormData', {}, (response) => {
+          if (chrome.runtime.lastError) {
+            console.error(chrome.runtime.lastError.message)
+            return
+          }
+          setFormData(response)
+          setUrl(activeTab.url || '')
+        })
       }
     })
   }, [])
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    console.log('Input changed: ', name, value)
-
-    const updatedFormItems = formItems.map((item) =>
-      item.name.toLowerCase() === name.toLowerCase() ? { ...item, value: value } : item,
-    )
-    setFormItems(updatedFormItems)
-  }
-
-  const handleAutoFill = () => {
-    // Filter out the form items that have user input
-    const filledFormItems = formItems.filter((item) => item.value)
-
-    // Send message to content script to perform autofill action with the filled form items
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs[0]?.id) {
-        chrome.tabs.sendMessage(tabs[0].id, {
-          action: 'performAutoFill',
-          formItems: filledFormItems.map((item) => ({ name: item.name, value: item.value })),
-        })
-      }
-    })
-  }
-
   return (
-    <div className="container">
-      <h1 className="title">Huzzle AI Autofill</h1>
-      <div className="autofill-button-container">
-        <button className="autofill-button" onClick={handleAutoFill}>
-          Autofill
-        </button>
-      </div>
-      {formItems.map((item) => (
-        <div className="item" key={item.name}>
-          <p className="label">{item.name}</p>
-          <input
-            className="input"
-            type="text"
-            name={item.name}
-            value={item.value || ''}
-            onChange={handleInputChange}
-          />
-        </div>
-      ))}
-      <p className="url">Current URL: {currentUrl}</p>
+    <div>
+      {formData.map((item, index) => {
+        if (
+          (url.includes('lever.co') &&
+            [
+              'name',
+              'email',
+              'phone',
+              'org',
+              'urls[LinkedIn]',
+              'urls[Twitter]',
+              'urls[GitHub]',
+              'urls[Portfolio]',
+            ].includes(item.name)) ||
+          (url.includes('greenhouse.io') &&
+            [
+              'first_name',
+              'last_name',
+              'email',
+              'phone',
+              'job_application_answers_attributes_0_text_value',
+            ].includes(item.id)) ||
+          (url.includes('teamtailor.com') &&
+            [
+              'candidate_first_name',
+              'candidate_last_name',
+              'candidate_email',
+              'candidate_phone',
+            ].includes(item.id)) ||
+          (url.includes('workable.com') &&
+            ['firstname', 'lastname', 'email', 'phone', 'cover_letter'].includes(item.id))
+        ) {
+          return (
+            <InputField key={index} label={item.name || item.id || ''} value={item.value || ''} />
+          )
+        }
+        return null
+      })}
     </div>
   )
 }
