@@ -39,7 +39,6 @@ const Popup: React.FC = () => {
             console.error(chrome.runtime.lastError.message)
             return
           }
-          console.log(response) // Print the form data to the console
           setFormData(response)
           setUrl(activeTab.url || '')
         })
@@ -92,13 +91,8 @@ const Popup: React.FC = () => {
               (url.includes('jobvite.com') &&
                 ['given-name', 'family-name', 'email', 'tel'].includes(item.autocomplete))
             ) {
-              return (
-                <InputField
-                  key={index}
-                  label={item.name || item.id || ''}
-                  value={item.value || ''}
-                />
-              )
+              console.log({ item })
+              return <InputField key={index} label={item.label || ''} value={item.value || ''} />
             }
             return null
           })}

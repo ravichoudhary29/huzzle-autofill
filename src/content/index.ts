@@ -1,9 +1,22 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message === 'getFormData') {
-    const allInputElements = document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+    let allInputNodes = document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
       'input,textarea',
     )
-    const allInputData = Array.from(allInputElements).map((inputElement) => {
+    const allInputElements = Array.from(allInputNodes)
+    const allInputData = allInputElements.map((inputElement) => {
+      const inputElementId = inputElement.id
+      const inputElementLabelSelector = `label[for="${inputElementId}"]`
+      let label = document.querySelector(inputElementLabelSelector)
+      let labelText = label?.innerText
+      if (!labelText) {
+        let inputLabel = inputElement
+        while (inputLabel && inputLabel?.tagName !== 'LABEL') {
+          inputLabel = inputLabel?.parentElement
+        }
+        labelText = inputLabel?.innerText
+      }
+
       return {
         name: inputElement.name,
         id: inputElement.id,
@@ -11,11 +24,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         placeholder: inputElement.placeholder,
         type: inputElement.type,
         autocomplete: inputElement.autocomplete,
-        label:
-          (inputElement.labels &&
-            inputElement.labels.length > 0 &&
-            inputElement.labels[0].textContent) ||
-          '',
+        label: labelText,
       }
     })
     sendResponse(allInputData)
