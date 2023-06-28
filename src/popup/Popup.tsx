@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import './popup.css' // importing your CSS file
 
 interface IInputProps {
   label: string
@@ -13,9 +14,14 @@ const InputField: React.FC<IInputProps> = ({ label, value }) => {
   }, [value])
 
   return (
-    <div>
-      <label>{label}</label>
-      <input type="text" value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
+    <div className="item">
+      <label className="label">{label}</label>
+      <input
+        type="text"
+        value={inputValue}
+        onChange={(e) => setInputValue(e.target.value)}
+        className="input"
+      />
     </div>
   )
 }
@@ -33,6 +39,7 @@ const Popup: React.FC = () => {
             console.error(chrome.runtime.lastError.message)
             return
           }
+          console.log(response) // Print the form data to the console
           setFormData(response)
           setUrl(activeTab.url || '')
         })
@@ -40,45 +47,68 @@ const Popup: React.FC = () => {
     })
   }, [])
 
+  const isSupportedWebsite =
+    url.includes('lever.co') ||
+    url.includes('greenhouse.io') ||
+    url.includes('teamtailor.com') ||
+    url.includes('workable.com') ||
+    url.includes('jobvite.com')
+
   return (
-    <div>
-      {formData.map((item, index) => {
-        if (
-          (url.includes('lever.co') &&
-            [
-              'name',
-              'email',
-              'phone',
-              'org',
-              'urls[LinkedIn]',
-              'urls[Twitter]',
-              'urls[GitHub]',
-              'urls[Portfolio]',
-            ].includes(item.name)) ||
-          (url.includes('greenhouse.io') &&
-            [
-              'first_name',
-              'last_name',
-              'email',
-              'phone',
-              'job_application_answers_attributes_0_text_value',
-            ].includes(item.id)) ||
-          (url.includes('teamtailor.com') &&
-            [
-              'candidate_first_name',
-              'candidate_last_name',
-              'candidate_email',
-              'candidate_phone',
-            ].includes(item.id)) ||
-          (url.includes('workable.com') &&
-            ['firstname', 'lastname', 'email', 'phone', 'cover_letter'].includes(item.id))
-        ) {
-          return (
-            <InputField key={index} label={item.name || item.id || ''} value={item.value || ''} />
-          )
-        }
-        return null
-      })}
+    <div className="container">
+      <h2 className="title">Huzzle AI Autofill</h2>
+      {isSupportedWebsite ? (
+        <>
+          {formData.map((item, index) => {
+            if (
+              (url.includes('lever.co') &&
+                [
+                  'name',
+                  'email',
+                  'phone',
+                  'org',
+                  'urls[LinkedIn]',
+                  'urls[Twitter]',
+                  'urls[GitHub]',
+                  'urls[Portfolio]',
+                ].includes(item.name)) ||
+              (url.includes('greenhouse.io') &&
+                [
+                  'first_name',
+                  'last_name',
+                  'email',
+                  'phone',
+                  'job_application_answers_attributes_0_text_value',
+                ].includes(item.id)) ||
+              (url.includes('teamtailor.com') &&
+                [
+                  'candidate_first_name',
+                  'candidate_last_name',
+                  'candidate_email',
+                  'candidate_phone',
+                ].includes(item.id)) ||
+              (url.includes('workable.com') &&
+                ['firstname', 'lastname', 'email', 'phone', 'cover_letter'].includes(item.id)) ||
+              (url.includes('jobvite.com') &&
+                ['given-name', 'family-name', 'email', 'tel'].includes(item.autocomplete))
+            ) {
+              return (
+                <InputField
+                  key={index}
+                  label={item.name || item.id || ''}
+                  value={item.value || ''}
+                />
+              )
+            }
+            return null
+          })}
+          <div className="autofill-button-container">
+            <button className="autofill-button">Autofill</button>
+          </div>
+        </>
+      ) : (
+        <p>This website is not supported by the Huzzle autofill extension.</p>
+      )}
     </div>
   )
 }
