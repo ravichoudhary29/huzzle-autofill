@@ -1,143 +1,72 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
+import axios from 'axios'
 import './Options.css'
 
-interface IUserData {
-  firstName: string
-  lastName: string
-  email: string
-  phone: string
-  githubId: string
-  linkedInId: string
-  portfolioUrl: string
-}
+export default function Options() {
+  const [email, setEmail] = useState('')
+  const [otp, setOtp] = useState('')
 
-const initialUserData: IUserData = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  phone: '',
-  githubId: '',
-  linkedInId: '',
-  portfolioUrl: '',
-}
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) =>
+    setEmail(event.target.value)
+  const handleOTPChange = (event: React.ChangeEvent<HTMLInputElement>) => setOtp(event.target.value)
 
-function App() {
-  const [userData, setUserData] = useState<IUserData>(initialUserData)
-  const [savedUserData, setSavedUserData] = useState<IUserData>(initialUserData)
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    const data = {
+      user: {
+        email: 'ravi@huzzle.app',
+        userable_type: 'Candidate',
+        userable_source: 'website',
+      },
+    }
+    // Call your API to send the OTP
+    axios
+      .post('https://api.huzzle.app/api/v1/candidate/login', data)
 
-  useEffect(() => {
-    chrome.storage.local.get('userData', (data) => {
-      const retrievedData = data.userData || initialUserData
-      setUserData(retrievedData)
-      setSavedUserData(retrievedData)
-    })
-  }, [])
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUserData({
-      ...userData,
-      [event.target.name]: event.target.value,
-    })
+      .then((response) => {
+        console.log(response.data) // Display the response from your API
+      })
+      .catch((error) => {
+        console.error('An error occurred:', error)
+      })
   }
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const verifyOTP = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
-    chrome.storage.local.set({ userData }, () => {
-      setSavedUserData(userData)
-    })
+    // Verify the OTP using your API
+    axios
+      .post('https://api.huzzle.app/api/v1/login', {
+        user: {
+          email: email,
+          otp: otp,
+        },
+      })
+      .then((response) => {
+        console.log(response.data) // Display the response from your API
+      })
+      .catch((error) => {
+        console.error('An error occurred:', error)
+      })
   }
 
   return (
-    <main className="main-container">
-      <h3>User Data</h3>
-      <form className="form-container" onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>First Name:</label>
-          <input
-            className="form-input"
-            name="firstName"
-            type="text"
-            value={userData.firstName}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <label>Last Name:</label>
-          <input
-            className="form-input"
-            name="lastName"
-            type="text"
-            value={userData.lastName}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <label>Email:</label>
-          <input
-            className="form-input"
-            name="email"
-            type="text"
-            value={userData.email}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <label>Phone:</label>
-          <input
-            className="form-input"
-            name="phone"
-            type="text"
-            value={userData.phone}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <label>Github ID:</label>
-          <input
-            className="form-input"
-            name="githubId"
-            type="text"
-            value={userData.githubId}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <label>LinkedIn ID:</label>
-          <input
-            className="form-input"
-            name="linkedInId"
-            type="text"
-            value={userData.linkedInId}
-            onChange={handleChange}
-          />
-        </div>
-        <div className="form-group">
-          <label>Portfolio URL:</label>
-          <input
-            className="form-input"
-            name="portfolioUrl"
-            type="text"
-            value={userData.portfolioUrl}
-            onChange={handleChange}
-          />
-        </div>
-        <button className="save-button" type="submit">
-          Save
-        </button>
+    <div className="container">
+      <h2>Huzzle SignIn</h2>
+      <form onSubmit={handleSubmit}>
+        <label>
+          Email:
+          <input type="email" value={email} onChange={handleEmailChange} required />
+        </label>
+        <button type="submit">Send OTP</button>
       </form>
 
-      <div className="saved-data">
-        <h3>Saved User Data</h3>
-        <p>First Name: {savedUserData.firstName}</p>
-        <p>Last Name: {savedUserData.lastName}</p>
-        <p>Email: {savedUserData.email}</p>
-        <p>Phone: {savedUserData.phone}</p>
-        <p>Github ID: {savedUserData.githubId}</p>
-        <p>LinkedIn ID: {savedUserData.linkedInId}</p>
-        <p>Portfolio URL: {savedUserData.portfolioUrl}</p>
-      </div>
-    </main>
+      <form onSubmit={verifyOTP}>
+        <label>
+          OTP:
+          <input type="text" value={otp} onChange={handleOTPChange} required />
+        </label>
+        <button type="submit">Sign In</button>
+      </form>
+    </div>
   )
 }
-
-export default App

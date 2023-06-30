@@ -30,6 +30,13 @@ const Popup: React.FC = () => {
   const [formData, setFormData] = useState<any[]>([])
   const [url, setUrl] = useState<string>('')
 
+  const signIn = () => {
+    // Here you will set the login status
+    // and redirect the user to the options page
+
+    chrome.runtime.openOptionsPage()
+  }
+
   useEffect(() => {
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const activeTab = tabs[0]
@@ -56,6 +63,9 @@ const Popup: React.FC = () => {
   return (
     <div className="container">
       <h2 className="title">Huzzle AI Autofill</h2>
+      <button onClick={signIn} className="signInButton">
+        Sign In
+      </button>
       {isSupportedWebsite ? (
         <>
           {formData.map((item, index) => {

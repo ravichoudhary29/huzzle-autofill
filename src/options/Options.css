@@ -1,57 +1,37 @@
-.main-container {
-  font-family: Arial, sans-serif;
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 2rem;
-  background: linear-gradient(rgb(21, 21, 25), rgba(0, 147, 145));
-  color: white; /* Make the text color white so it pops out against the dark background */
-  border-radius: 10px;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-}
-
-.form-container {
-  display: grid;
-  gap: 1rem;
-}
-
-.form-group {
+.container {
   display: flex;
   flex-direction: column;
-}
-
-.form-input {
-  padding: 0.5rem;
+  justify-content: center;
+  align-items: center;
+  width: 400px;
+  height: 700px;
+  background: linear-gradient(rgb(21, 21, 25), rgba(0, 147, 145));
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
   border-radius: 5px;
-  color: #f2f2f2;
-  background-color: black;
-  border: none;
+  margin-top: 50px;
 }
 
-.save-button {
-  padding: 0.5rem 1rem;
-  background-color: #61dafb;
+.container form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: transparent;
+}
+
+.container form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 20px;
   color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
 }
 
-.save-button:hover {
-  background-color: #4ecdc4;
+.container form input {
+  height: 40px;
+  font-size: 18px;
 }
 
-.saved-data {
-  margin-top: 2rem;
-  padding: 1rem;
-  background-color: #f2f2f2;
-  border-radius: 10px;
-  color: black; /* Make the saved data text black for better readability */
-}
-
-h3 {
-  color: rgb(20, 149, 0); /* Make heading color white */
-  font-size: 1.5rem;
-  font-weight: 500;
-  text-align: center;
-  margin-bottom: 1rem;
+.container form button {
+  font-size: 20px;
 }
