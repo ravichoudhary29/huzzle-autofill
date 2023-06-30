@@ -1,10 +1,10 @@
 .container {
   display: flex;
-  justify-content: space-between;
   width: 100%;
+  justify-content: space-evenly;
 }
 
-.form-container {
+.form-container-left {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -14,12 +14,24 @@
     rgb(21, 21, 25)
   ); /* Specify the background color here */
   border-radius: 5px;
-  padding: 20px;
+  padding: 10px;
+}
+.form-container-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(
+    rgba(0, 147, 145),
+    rgb(21, 21, 25)
+  ); /* Specify the background color here */
+  border-radius: 5px;
+  padding: 10px;
 }
 
 .left-form {
   width: 400px;
-  height: 300px;
+  height: 50px;
 }
 
 .right-form {
