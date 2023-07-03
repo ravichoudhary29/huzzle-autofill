@@ -29,7 +29,8 @@ const InputField: React.FC<IInputProps> = ({ label, value }) => {
 
 const Popup: React.FC = () => {
   const [formData, setFormData] = useState<any[]>([])
-  const [userData, setUserData] = useState<any[]>([]) // store user data
+  const [userData, setUserData] = useState<Record<string, any>>({})
+
   const [url, setUrl] = useState<string>('')
 
   const signIn = () => {
@@ -40,31 +41,45 @@ const Popup: React.FC = () => {
   }
 
   useEffect(() => {
-    chrome.storage.local.get(['userData'], function (result) {
-      if (result.userData) {
-        setUserData(result.userData)
-        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-          const activeTab = tabs[0]
-          if (activeTab.id) {
-            chrome.tabs.sendMessage(activeTab.id, 'getFormData', {}, (response) => {
-              if (chrome.runtime.lastError) {
-                console.error(chrome.runtime.lastError.message)
-                return
-              }
-              // Map user data to form data
-              const mappedFormData = response.map((field) => ({
-                ...field,
-                value:
-                  result.userData[
-                    attributeToKeyMap[field.name] ||
-                      attributeToKeyMap[field.id] ||
-                      attributeToKeyMap[field.autocomplete]
-                  ] || '',
-              }))
-              setFormData(mappedFormData)
-              setUrl(activeTab.url || '')
-            })
+    const userDataPromise = new Promise<Record<string, any>>((resolve) => {
+      chrome.storage.local.get(['userData'], function (result) {
+        resolve(result.userData)
+      })
+    })
+
+    const activeTabPromise = new Promise<chrome.tabs.Tab>((resolve) => {
+      chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        resolve(tabs[0])
+      })
+    })
+
+    Promise.all([userDataPromise, activeTabPromise]).then(([userData, activeTab]) => {
+      setUserData(userData)
+      if (activeTab.id) {
+        chrome.tabs.sendMessage(activeTab.id, 'getFormData', {}, (response) => {
+          if (chrome.runtime.lastError) {
+            console.error(chrome.runtime.lastError.message)
+            return
           }
+          // Map user data to form data
+          const mappedFormData = response.map((field: any) => {
+            let valueKey: string | undefined
+            for (const attribute in attributeToKeyMap) {
+              if (
+                attributeToKeyMap[attribute].includes(field.name) ||
+                attributeToKeyMap[attribute].includes(field.id) ||
+                attributeToKeyMap[attribute].includes(field.autocomplete)
+              ) {
+                valueKey = attribute
+              }
+            }
+            return {
+              ...field,
+              value: valueKey ? (userData as { [key: string]: any })[valueKey] : '',
+            }
+          })
+          setFormData(mappedFormData)
+          setUrl(activeTab.url || '')
         })
       }
     })
