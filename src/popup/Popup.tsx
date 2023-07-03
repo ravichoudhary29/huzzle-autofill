@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { attributeToKeyMap } from './attributeToKeyMap'
 import './popup.css' // importing your CSS file
 
 interface IInputProps {
@@ -28,6 +29,7 @@ const InputField: React.FC<IInputProps> = ({ label, value }) => {
 
 const Popup: React.FC = () => {
   const [formData, setFormData] = useState<any[]>([])
+  const [userData, setUserData] = useState<any[]>([]) // store user data
   const [url, setUrl] = useState<string>('')
 
   const signIn = () => {
@@ -38,16 +40,31 @@ const Popup: React.FC = () => {
   }
 
   useEffect(() => {
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      const activeTab = tabs[0]
-      if (activeTab.id) {
-        chrome.tabs.sendMessage(activeTab.id, 'getFormData', {}, (response) => {
-          if (chrome.runtime.lastError) {
-            console.error(chrome.runtime.lastError.message)
-            return
+    chrome.storage.local.get(['userData'], function (result) {
+      if (result.userData) {
+        setUserData(result.userData)
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+          const activeTab = tabs[0]
+          if (activeTab.id) {
+            chrome.tabs.sendMessage(activeTab.id, 'getFormData', {}, (response) => {
+              if (chrome.runtime.lastError) {
+                console.error(chrome.runtime.lastError.message)
+                return
+              }
+              // Map user data to form data
+              const mappedFormData = response.map((field) => ({
+                ...field,
+                value:
+                  result.userData[
+                    attributeToKeyMap[field.name] ||
+                      attributeToKeyMap[field.id] ||
+                      attributeToKeyMap[field.autocomplete]
+                  ] || '',
+              }))
+              setFormData(mappedFormData)
+              setUrl(activeTab.url || '')
+            })
           }
-          setFormData(response)
-          setUrl(activeTab.url || '')
         })
       }
     })
@@ -80,8 +97,6 @@ const Popup: React.FC = () => {
                   'urls[Twitter]',
                   'urls[GitHub]',
                   'urls[Portfolio]',
-                  'urls[Other]',
-                  'comments',
                 ].includes(item.name)) ||
               (url.includes('greenhouse.io') &&
                 [
