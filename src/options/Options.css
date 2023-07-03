@@ -54,3 +54,20 @@
 .right-form input {
   width: 50%;
 }
+
+.wrap-text {
+  word-wrap: break-word;
+  max-width: 500px; /* adjust as needed */
+}
+
+.key-text {
+  text-transform: uppercase;
+  font-weight: bold;
+  font-size: 1.2em;
+  margin-right: 10px;
+}
+
+.value-text {
+  font-size: 1.1em;
+  color: rgb(234, 195, 195);
+}

@@ -96,17 +96,23 @@ export default function Options() {
           <div className="right-form">
             {keysOfInterest.map((key) =>
               userData[key] ? (
-                <p key={key}>
-                  {' '}
-                  {key}: {JSON.stringify(userData[key])}
+                <p key={key} className="wrap-text">
+                  <span className="key-text">{key}:</span>
+                  <span className="value-text">{JSON.stringify(userData[key])}</span>
                 </p>
               ) : null,
             )}
             {userData.degree && userData.degree.data && userData.degree.data.attributes && (
-              <p>degree.name: {userData.degree.data.attributes.name}</p>
+              <p className="wrap-text">
+                <span className="key-text">degree.name:</span>
+                <span className="value-text">{userData.degree.data.attributes.name}</span>
+              </p>
             )}
             {userData.subject && userData.subject.data && userData.subject.data.attributes && (
-              <p>subject.name: {userData.subject.data.attributes.name}</p>
+              <p className="wrap-text">
+                <span className="key-text">subject.name:</span>
+                <span className="value-text">{userData.subject.data.attributes.name}</span>
+              </p>
             )}
           </div>
         )}

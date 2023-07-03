@@ -80,6 +80,8 @@ const Popup: React.FC = () => {
                   'urls[Twitter]',
                   'urls[GitHub]',
                   'urls[Portfolio]',
+                  'urls[Other]',
+                  'comments',
                 ].includes(item.name)) ||
               (url.includes('greenhouse.io') &&
                 [
@@ -97,7 +99,8 @@ const Popup: React.FC = () => {
                   'candidate_phone',
                 ].includes(item.id)) ||
               (url.includes('workable.com') &&
-                ['firstname', 'lastname', 'email', 'phone', 'cover_letter'].includes(item.id)) ||
+                (['firstname', 'lastname', 'email', 'phone', 'cover_letter'].includes(item.id) ||
+                  item.name === 'phone')) ||
               (url.includes('jobvite.com') &&
                 ['given-name', 'family-name', 'email', 'tel'].includes(item.autocomplete))
             ) {
