@@ -5,9 +5,10 @@ import './popup.css' // importing your CSS file
 interface IInputProps {
   label: string
   value: string
+  onChange: (value: string) => void
 }
 
-const InputField: React.FC<IInputProps> = ({ label, value }) => {
+const InputField: React.FC<IInputProps> = ({ label, value, onChange }) => {
   const [inputValue, setInputValue] = useState('')
 
   useEffect(() => {
@@ -20,7 +21,10 @@ const InputField: React.FC<IInputProps> = ({ label, value }) => {
       <input
         type="text"
         value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
+        onChange={(e) => {
+          setInputValue(e.target.value)
+          onChange(e.target.value)
+        }}
         className="input"
       />
     </div>
@@ -32,6 +36,32 @@ const Popup: React.FC = () => {
   const [userData, setUserData] = useState<Record<string, any>>({})
 
   const [url, setUrl] = useState<string>('')
+
+  const handleInputChange = (index: number, newValue: string) => {
+    setFormData((prevFormData) => {
+      const newFormData = [...prevFormData]
+      newFormData[index] = { ...newFormData[index], value: newValue }
+
+      setUserData((prevUserData) => {
+        const updatedUserData = { ...prevUserData }
+        const updatedKey =
+          newFormData[index].name || newFormData[index].id || newFormData[index].autocomplete
+        if (updatedKey) {
+          updatedUserData[updatedKey] = newValue
+        }
+        return updatedUserData
+      })
+
+      return newFormData
+    })
+  }
+
+  const autofill = () => {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (!tabs[0].id) return
+      chrome.tabs.sendMessage(tabs[0].id, { type: 'AUTOFILL', formData })
+    })
+  }
 
   const signIn = () => {
     // Here you will set the login status
@@ -75,7 +105,7 @@ const Popup: React.FC = () => {
             }
             return {
               ...field,
-              value: valueKey ? (userData as { [key: string]: any })[valueKey] : '',
+              value: valueKey && userData[valueKey] !== undefined ? userData[valueKey] : '',
             }
           })
           setFormData(mappedFormData)
@@ -135,12 +165,21 @@ const Popup: React.FC = () => {
                 ['given-name', 'family-name', 'email', 'tel'].includes(item.autocomplete))
             ) {
               console.log({ item })
-              return <InputField key={index} label={item.label || ''} value={item.value || ''} />
+              return (
+                <InputField
+                  key={index}
+                  label={item.label || ''}
+                  value={item.value || ''}
+                  onChange={(newValue) => handleInputChange(index, newValue)}
+                />
+              )
             }
             return null
           })}
           <div className="autofill-button-container">
-            <button className="autofill-button">Autofill</button>
+            <button className="autofill-button" onClick={autofill}>
+              Autofill
+            </button>
           </div>
         </>
       ) : (

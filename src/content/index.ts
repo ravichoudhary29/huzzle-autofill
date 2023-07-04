@@ -28,6 +28,21 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       }
     })
     sendResponse(allInputData)
+  } else if (message.type === 'AUTOFILL') {
+    const allInputElements = document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
+      'input,textarea',
+    )
+    const formValues = message.formData
+
+    allInputElements.forEach((inputElement) => {
+      const matchingValue = formValues.find(
+        (field: any) => field.name === inputElement.name || field.id === inputElement.id,
+      )
+
+      if (matchingValue) {
+        inputElement.value = matchingValue.value
+      }
+    })
   }
 
   return true
