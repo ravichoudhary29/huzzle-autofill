@@ -134,6 +134,7 @@ const Popup: React.FC = () => {
             if (
               (url.includes('lever.co') &&
                 [
+                  'resume',
                   'name',
                   'email',
                   'phone',
@@ -142,6 +143,18 @@ const Popup: React.FC = () => {
                   'urls[Twitter]',
                   'urls[GitHub]',
                   'urls[Portfolio]',
+                  'urls[Other]',
+                  'comments',
+
+                  'cards[f123cab7-b366-4897-98ef-ac2d88f5089c][field1]',
+                  'cards[f123cab7-b366-4897-98ef-ac2d88f5089c][field2]',
+                  'cards[f123cab7-b366-4897-98ef-ac2d88f5089c][field3]',
+                  'cards[f123cab7-b366-4897-98ef-ac2d88f5089c][field4]',
+                  'cards[f123cab7-b366-4897-98ef-ac2d88f5089c][field6]',
+
+                  'cards[62e3c836-a509-40e6-9895-ae79407cdcae][field1]',
+                  'cards[62e3c836-a509-40e6-9895-ae79407cdcae][field2]',
+                  'cards[62e3c836-a509-40e6-9895-ae79407cdcae][field0]',
                 ].includes(item.name)) ||
               (url.includes('greenhouse.io') &&
                 [
