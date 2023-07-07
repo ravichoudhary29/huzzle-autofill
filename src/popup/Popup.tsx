@@ -155,6 +155,19 @@ const Popup: React.FC = () => {
                   'cards[62e3c836-a509-40e6-9895-ae79407cdcae][field1]',
                   'cards[62e3c836-a509-40e6-9895-ae79407cdcae][field2]',
                   'cards[62e3c836-a509-40e6-9895-ae79407cdcae][field0]',
+
+                  'cards[a496c793-bdcd-4703-9bff-2f23c7a8dc5c][field0]',
+
+                  'cards[522c5a72-a91c-4b9f-a8cf-eb5f0cb25ab7][field0]',
+                  'cards[88ca6817-b704-45cc-aef3-59a24df2f405][field0]',
+
+                  'cards[7123737d-00b8-4900-a9bf-0059cbbbb3ff][field0]',
+
+                  'cards[205cbc38-3a25-46fa-b3a7-ede8966e314f][field0]',
+                  'cards[1e303a9c-924a-40dd-ab18-b3cbe5672441][field0]',
+                  'cards[06fd7b42-4805-4b54-a182-a3fa44266a4f][field0]',
+                  'cards[06fd7b42-4805-4b54-a182-a3fa44266a4f][field3]',
+                  'cards[1511a958-cba8-4266-8468-abdd3e0d8d9b][field3]',
                 ].includes(item.name)) ||
               (url.includes('greenhouse.io') &&
                 [
@@ -163,6 +176,10 @@ const Popup: React.FC = () => {
                   'email',
                   'phone',
                   'job_application_answers_attributes_0_text_value',
+                  'job_application_answers_attributes_6_text_value',
+                  'job_application_answers_attributes_4_text_value',
+                  'job_application_answers_attributes_5_text_value',
+                  'job_application_answers_attributes_2_text_value',
                 ].includes(item.id)) ||
               (url.includes('teamtailor.com') &&
                 [
@@ -172,8 +189,25 @@ const Popup: React.FC = () => {
                   'candidate_phone',
                 ].includes(item.id)) ||
               (url.includes('workable.com') &&
-                (['firstname', 'lastname', 'email', 'phone', 'cover_letter'].includes(item.id) ||
-                  item.name === 'phone')) ||
+                ([
+                  'firstname',
+                  'lastname',
+                  'email',
+                  // 'phone',
+                  'cover_letter',
+                  'address',
+                  'CA_6551',
+                  'school',
+                  'field_of_study',
+                  'degree',
+                  'summary',
+                ].includes(item.id) || item.name === 'phone',
+                // 'start_date',
+                // 'end_date'
+                'title',
+                'company',
+                'industry',
+                'summary')) ||
               (url.includes('jobvite.com') &&
                 ['given-name', 'family-name', 'email', 'tel'].includes(item.autocomplete))
             ) {
