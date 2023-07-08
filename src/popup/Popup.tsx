@@ -132,7 +132,9 @@ const Popup: React.FC = () => {
         <>
           {formData.map((item, index) => {
             if (
-              (url.includes('lever.co') &&
+              (item.label &&
+                item.label.trim() !== '' &&
+                url.includes('lever.co') &&
                 [
                   'resume',
                   'name',
@@ -200,10 +202,10 @@ const Popup: React.FC = () => {
                   'school',
                   'field_of_study',
                   'degree',
-                  'summary',
+                  // 'summary',
                 ].includes(item.id) || item.name === 'phone',
-                // 'start_date',
-                // 'end_date'
+                'start_date',
+                'end_date',
                 'title',
                 'company',
                 'industry',
