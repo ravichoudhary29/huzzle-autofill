@@ -5,6 +5,7 @@ export enum JobSite {
   WORKABLE = 'workable.com',
   JOBVITE = 'jobvite.com',
   WORKDAY = 'myworkdayjobs.com',
+  BAMBOOHR = 'bamboohr.com',
 }
 
 const WORKABLE_PROP_MAP = {
@@ -118,6 +119,29 @@ const WORKDAY_PROP_MAP = {
   AUTO_COMPLETES: [],
 }
 
+const BAMBOOHR_PROP_MAP = {
+  IDS: [
+    'firstName',
+    'lastName',
+    'email',
+    'phone',
+    'streetAddress',
+    'city',
+    'zip',
+    'desiredPay',
+    'websiteUrl',
+    'linkedinUrl',
+    'educationInstitutionName',
+    'referredBy',
+    'customQuestions[632]',
+    'customQuestions[633]',
+    'customQuestions[634]',
+    'customQuestions[635]',
+  ],
+  NAMES: [],
+  AUTO_COMPLETES: [],
+}
+
 export const JobSiteMap = {
   [JobSite.LEVER]: LEVER_PROP_MAP,
   [JobSite.WORKABLE]: WORKABLE_PROP_MAP,
@@ -125,4 +149,5 @@ export const JobSiteMap = {
   [JobSite.TEAMTAILOR]: TEAMTAILOR_PROP_MAP,
   [JobSite.JOBVITE]: JOBVITE_PROP_MAP,
   [JobSite.WORKDAY]: WORKDAY_PROP_MAP,
+  [JobSite.BAMBOOHR]: BAMBOOHR_PROP_MAP,
 }
