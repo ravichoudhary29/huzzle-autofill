@@ -1,0 +1,94 @@
+export enum JobSite {
+  LEVER = 'lever.co',
+  GREENHOUSE = 'greenhouse.io',
+  TEAMTAILOR = 'teamtailor.com',
+  WORKABLE = 'workable.com',
+  JOBVITE = 'jobvite.com',
+}
+
+const WORKABLE_PROP_MAP = {
+  IDS: [
+    'firstname',
+    'lastname',
+    'email',
+    'cover_letter',
+    'address',
+    'CA_6551',
+    'school',
+    'field_of_study',
+    'degree',
+  ],
+  NAMES: ['phone', 'start_date', 'end_date', 'title', 'company', 'industry', 'summary'],
+  AUTO_COMPLETES: [],
+}
+
+const LEVER_PROP_MAP = {
+  IDS: [],
+  NAMES: [
+    'resume',
+    'name',
+    'email',
+    'phone',
+    'org',
+    'urls[LinkedIn]',
+    'urls[Twitter]',
+    'urls[GitHub]',
+    'urls[Portfolio]',
+    'urls[Other]',
+    'comments',
+    'cards[f123cab7-b366-4897-98ef-ac2d88f5089c][field1]',
+    'cards[f123cab7-b366-4897-98ef-ac2d88f5089c][field2]',
+    'cards[f123cab7-b366-4897-98ef-ac2d88f5089c][field3]',
+    'cards[f123cab7-b366-4897-98ef-ac2d88f5089c][field4]',
+    'cards[f123cab7-b366-4897-98ef-ac2d88f5089c][field6]',
+    'cards[62e3c836-a509-40e6-9895-ae79407cdcae][field1]',
+    'cards[62e3c836-a509-40e6-9895-ae79407cdcae][field2]',
+    'cards[62e3c836-a509-40e6-9895-ae79407cdcae][field0]',
+    'cards[a496c793-bdcd-4703-9bff-2f23c7a8dc5c][field0]',
+    'cards[522c5a72-a91c-4b9f-a8cf-eb5f0cb25ab7][field0]',
+    'cards[88ca6817-b704-45cc-aef3-59a24df2f405][field0]',
+    'cards[7123737d-00b8-4900-a9bf-0059cbbbb3ff][field0]',
+    'cards[205cbc38-3a25-46fa-b3a7-ede8966e314f][field0]',
+    'cards[1e303a9c-924a-40dd-ab18-b3cbe5672441][field0]',
+    'cards[06fd7b42-4805-4b54-a182-a3fa44266a4f][field0]',
+    'cards[06fd7b42-4805-4b54-a182-a3fa44266a4f][field3]',
+    'cards[1511a958-cba8-4266-8468-abdd3e0d8d9b][field3]',
+  ],
+  AUTO_COMPLETES: [],
+}
+
+const GREENHOUSE_PROP_MAP = {
+  IDS: [
+    'first_name',
+    'last_name',
+    'email',
+    'phone',
+    'job_application_answers_attributes_0_text_value',
+    'job_application_answers_attributes_6_text_value',
+    'job_application_answers_attributes_4_text_value',
+    'job_application_answers_attributes_5_text_value',
+    'job_application_answers_attributes_2_text_value',
+  ],
+  NAMES: [],
+  AUTO_COMPLETES: [],
+}
+
+const TEAMTAILOR_PROP_MAP = {
+  IDS: ['candidate_first_name', 'candidate_last_name', 'candidate_email', 'candidate_phone'],
+  NAMES: [],
+  AUTO_COMPLETES: [],
+}
+
+const JOBVITE_PROP_MAP = {
+  IDS: [],
+  NAMES: [],
+  AUTO_COMPLETES: ['given-name', 'family-name', 'email', 'tel'],
+}
+
+export const JobSiteMap = {
+  [JobSite.LEVER]: LEVER_PROP_MAP,
+  [JobSite.WORKABLE]: WORKABLE_PROP_MAP,
+  [JobSite.GREENHOUSE]: GREENHOUSE_PROP_MAP,
+  [JobSite.TEAMTAILOR]: TEAMTAILOR_PROP_MAP,
+  [JobSite.JOBVITE]: JOBVITE_PROP_MAP,
+}
