@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { attributeToKeyMap } from './attributeToKeyMap'
-import './popup.css' // importing your CSS file
+import './popup.css' 
 import { JobSite, JobSiteMap } from '../consts'
 
 interface IInputProps {
@@ -126,7 +126,8 @@ const Popup: React.FC = () => {
     url.includes('greenhouse.io') ||
     url.includes('teamtailor.com') ||
     url.includes('workable.com') ||
-    url.includes('jobvite.com')
+    url.includes('jobvite.com') ||
+    url.includes('myworkdayjobs.com')
 
   return (
     <div className="container">
@@ -150,7 +151,8 @@ const Popup: React.FC = () => {
                 JobSiteMap[JobSite.WORKABLE].IDS.includes(item.id)) ||
               JobSiteMap[JobSite.WORKABLE].NAMES.includes(item.name) ||
               (url.includes(JobSite.JOBVITE) &&
-                JobSiteMap[JobSite.JOBVITE].AUTO_COMPLETES.includes(item.autocomplete))
+                JobSiteMap[JobSite.JOBVITE].AUTO_COMPLETES.includes(item.autocomplete)) ||
+              (url.includes(JobSite.WORKDAY) && JobSiteMap[JobSite.WORKDAY].IDS.includes(item.id))
             ) {
               return (
                 <InputField

@@ -4,6 +4,7 @@ export enum JobSite {
   TEAMTAILOR = 'teamtailor.com',
   WORKABLE = 'workable.com',
   JOBVITE = 'jobvite.com',
+  WORKDAY = 'myworkdayjobs.com',
 }
 
 const WORKABLE_PROP_MAP = {
@@ -15,10 +16,20 @@ const WORKABLE_PROP_MAP = {
     'address',
     'CA_6551',
     'school',
+    'CA_6551',
     'field_of_study',
     'degree',
   ],
-  NAMES: ['phone', 'start_date', 'end_date', 'title', 'company', 'industry', 'summary'],
+  NAMES: [
+    'phone',
+    'start_date',
+    'end_date',
+    'title',
+    'company',
+    'industry',
+    'summary',
+    'QA_6542214',
+  ],
   AUTO_COMPLETES: [],
 }
 
@@ -63,6 +74,7 @@ const GREENHOUSE_PROP_MAP = {
     'last_name',
     'email',
     'phone',
+    'job_application_answers_attributes_1_text_value',
     'job_application_answers_attributes_0_text_value',
     'job_application_answers_attributes_6_text_value',
     'job_application_answers_attributes_4_text_value',
@@ -84,6 +96,27 @@ const JOBVITE_PROP_MAP = {
   NAMES: [],
   AUTO_COMPLETES: ['given-name', 'family-name', 'email', 'tel'],
 }
+const WORKDAY_PROP_MAP = {
+  IDS: [
+    'input-4',
+    'input-5',
+    'input-7',
+    'input-8',
+    ' input-9',
+    'input-10',
+    'input-13',
+    'input-14',
+    'input-17',
+    'input-18',
+    'input-19',
+    'input-27',
+    'input-63',
+    'input-66',
+    'input-108',
+  ],
+  NAMES: [],
+  AUTO_COMPLETES: [],
+}
 
 export const JobSiteMap = {
   [JobSite.LEVER]: LEVER_PROP_MAP,
@@ -91,4 +124,5 @@ export const JobSiteMap = {
   [JobSite.GREENHOUSE]: GREENHOUSE_PROP_MAP,
   [JobSite.TEAMTAILOR]: TEAMTAILOR_PROP_MAP,
   [JobSite.JOBVITE]: JOBVITE_PROP_MAP,
+  [JobSite.WORKDAY]: WORKDAY_PROP_MAP,
 }
