@@ -75,15 +75,20 @@ const GREENHOUSE_PROP_MAP = {
     'last_name',
     'email',
     'phone',
-    'job_application_answers_attributes_1_text_value',
-    'job_application_answers_attributes_0_text_value',
-    'job_application_answers_attributes_6_text_value',
-    'job_application_answers_attributes_4_text_value',
-    'job_application_answers_attributes_5_text_value',
-    'job_application_answers_attributes_2_text_value',
+    // 'job_application_answers_attributes_1_text_value',
+    // 'job_application_answers_attributes_0_text_value',
+    // 'job_application_answers_attributes_6_text_value',
+    // 'job_application_answers_attributes_4_text_value',
+    // 'job_application_answers_attributes_5_text_value',
+    // 'job_application_answers_attributes_2_text_value',
   ],
   NAMES: [],
   AUTO_COMPLETES: [],
+}
+for (let i = 1; i <= 100; i++) {
+  if (!GREENHOUSE_PROP_MAP.IDS.includes(`job_application_answers_attributes_${i}_text_value`)) {
+    GREENHOUSE_PROP_MAP.IDS.push(`job_application_answers_attributes_${i}_text_value`)
+  }
 }
 
 const TEAMTAILOR_PROP_MAP = {
@@ -99,24 +104,29 @@ const JOBVITE_PROP_MAP = {
 }
 const WORKDAY_PROP_MAP = {
   IDS: [
-    'input-4',
-    'input-5',
-    'input-7',
-    'input-8',
-    ' input-9',
-    'input-10',
-    'input-13',
-    'input-14',
-    'input-17',
-    'input-18',
-    'input-19',
-    'input-27',
-    'input-63',
-    'input-66',
-    'input-108',
+    // 'input-4',
+    // 'input-5',
+    // 'input-7',
+    // 'input-8',
+    // ' input-9',
+    // 'input-10',
+    // 'input-13',
+    // 'input-14',
+    // 'input-17',
+    // 'input-18',
+    // 'input-19',
+    // 'input-27',
+    // 'input-63',
+    // 'input-66',
+    // 'input-108',
   ],
   NAMES: [],
   AUTO_COMPLETES: [],
+}
+for (let i = 1; i <= 150; i++) {
+  if (!WORKDAY_PROP_MAP.IDS.includes(`input-${i}`)) {
+    WORKDAY_PROP_MAP.IDS.push(`input-${i}`)
+  }
 }
 
 const BAMBOOHR_PROP_MAP = {
@@ -131,15 +141,21 @@ const BAMBOOHR_PROP_MAP = {
     'desiredPay',
     'websiteUrl',
     'linkedinUrl',
+    'references',
     'educationInstitutionName',
     'referredBy',
-    'customQuestions[632]',
-    'customQuestions[633]',
-    'customQuestions[634]',
-    'customQuestions[635]',
+    // 'customQuestions[632]',
+    // 'customQuestions[633]',
+    // 'customQuestions[634]',
+    // 'customQuestions[635]',
   ],
   NAMES: [],
   AUTO_COMPLETES: [],
+}
+for (let i = 600; i <= 1000; i++) {
+  if (!BAMBOOHR_PROP_MAP.IDS.includes(`customQuestions[${i}]`)) {
+    BAMBOOHR_PROP_MAP.IDS.push(`customQuestions[${i}]`)
+  }
 }
 
 export const JobSiteMap = {
