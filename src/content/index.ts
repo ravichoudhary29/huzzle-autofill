@@ -1,3 +1,5 @@
+import { JobSite } from '../../src/consts'
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message === 'getFormData') {
     let allInputNodes = document.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>(
@@ -35,10 +37,16 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     const formValues = message.formData
 
     allInputElements.forEach((inputElement) => {
-      const matchingValue = formValues.find(
-        (field: any) => field.name === inputElement.name || field.id === inputElement.id,
-      )
-
+      const matchingValue = formValues.find((field: any) => {
+        // Lever.co specific handling using `name` attribute
+        if (window.location.hostname.includes(JobSite.LEVER)) {
+          return field.name === inputElement.name
+        }
+        // Default handling using `name` or `id`
+        else {
+          return field.name === inputElement.name || field.id === inputElement.id
+        }
+      })
       if (matchingValue) {
         inputElement.value = matchingValue.value
       }

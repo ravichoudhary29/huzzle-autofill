@@ -37,7 +37,7 @@ const WORKABLE_PROP_MAP = {
 const LEVER_PROP_MAP = {
   IDS: [],
   NAMES: [
-    'resume',
+    // 'resume',
     'name',
     'email',
     'phone',
